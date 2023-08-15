@@ -11,30 +11,40 @@ public class RightWheelController : MonoBehaviour
     public float motorTorque = 100f;
     public float maxSteerAngle = 30f;
     public WheelCollider wheelCollider;
-
+    private float TorqOutput = 0.0f;
+    private float SteerOutput = 0.0f;
 
     // Update is called once per frame
     private void FixedUpdate()
     {
-        float motorInput = GetMotorInput();
-        float steerInput = GetSteerInput();
-        wheelCollider.motorTorque = motorInput * motorTorque;
-
-        // Apply steering angle to the wheel
-        wheelCollider.steerAngle = steerInput * maxSteerAngle;
-
-        // Update visual rotation of the wheel mesh
-        UpdateWheelVisualRotation();
+        //UpdateWheelVisualRotation();
     }
+
 
     private float GetMotorInput()
     {
-        return Random.Range(0, motorTorque);
+        return wheelCollider.motorTorque;
     }
 
     private float GetSteerInput()
     {
-        return Random.Range(-maxSteerAngle, maxSteerAngle);
+        return wheelCollider.steerAngle;
+    }
+
+    public void Steer(float input)
+    {
+        SteerOutput = input * maxSteerAngle + SteerOutput;
+        Debug.Log(SteerOutput);
+        if (SteerOutput > maxSteerAngle) { SteerOutput = maxSteerAngle; }
+        wheelCollider.steerAngle = SteerOutput;
+
+    }
+    public void Accelerate(float input)
+    {
+        if (wheelCollider.motorTorque > motorTorque) { input = 0.0f; }
+        wheelCollider.motorTorque += input;
+       
+        Debug.Log(wheelCollider.motorTorque);
     }
 
 
@@ -43,9 +53,6 @@ public class RightWheelController : MonoBehaviour
         Vector3 position;
         Quaternion rotation;
         wheelCollider.GetWorldPose(out position, out rotation);
-
-        // Apply the position and rotation to the visual wheel mesh
-        // Assuming you have a "visualWheel" GameObject linked to this script
 
     }
 
