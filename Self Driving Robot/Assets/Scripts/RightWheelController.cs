@@ -8,43 +8,20 @@ public class RightWheelController : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public float motorTorque = 100f;
+    public float MaxmotorTorque = 100f;
     public float maxSteerAngle = 30f;
     public WheelCollider wheelCollider;
-    private float TorqOutput = 0.0f;
-    private float SteerOutput = 0.0f;
 
-    // Update is called once per frame
-    private void FixedUpdate()
-    {
-        //UpdateWheelVisualRotation();
-    }
-
-
-    private float GetMotorInput()
-    {
-        return wheelCollider.motorTorque;
-    }
-
-    private float GetSteerInput()
-    {
-        return wheelCollider.steerAngle;
-    }
 
     public void Steer(float input)
     {
-        SteerOutput = input * maxSteerAngle + SteerOutput;
-        Debug.Log(SteerOutput);
-        if (SteerOutput > maxSteerAngle) { SteerOutput = maxSteerAngle; }
-        wheelCollider.steerAngle = SteerOutput;
-
+        if(input > maxSteerAngle) { input = maxSteerAngle; }
+        wheelCollider.steerAngle = input;
     }
     public void Accelerate(float input)
     {
-        if (wheelCollider.motorTorque > motorTorque) { input = 0.0f; }
-        wheelCollider.motorTorque += input;
-       
-        Debug.Log(wheelCollider.motorTorque);
+        if (input > MaxmotorTorque) { input = MaxmotorTorque; }
+        wheelCollider.motorTorque = input;
     }
 
 
@@ -54,6 +31,8 @@ public class RightWheelController : MonoBehaviour
         Quaternion rotation;
         wheelCollider.GetWorldPose(out position, out rotation);
 
+        this.transform.position = position;
+        this.transform.rotation = rotation;
     }
 
 }
