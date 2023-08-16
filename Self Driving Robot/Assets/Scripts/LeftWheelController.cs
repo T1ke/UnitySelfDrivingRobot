@@ -8,20 +8,35 @@ public class LeftWheelController : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public float MaxmotorTorque = 10f;
-    public float maxSteerAngle = 30f;
+    public float MaxmotorTorque = 100f;
+    public float maxSteerAngle = 10f;
     public WheelCollider wheelCollider;
+    private Transform wheelMesh;
 
+    private void Start()
+    {
+        wheelMesh = transform.Find("Mesh");
+    }
 
+    public float getWheelSpeed()
+    {
+        return wheelCollider.rpm;
+    }
+    public float getSteer()
+    {
+        return wheelCollider.transform.rotation.y;
+    }
 
+    private void FixedUpdate()
+    {
+        UpdateWheelVisualRotation();
+    }
     public void Steer(float input)
     {
-        if (input > maxSteerAngle) { input = maxSteerAngle; }
-        wheelCollider.steerAngle = input;
+        wheelCollider.steerAngle = input * maxSteerAngle;
     }
     public void Accelerate(float input)
     {
-        if (input > MaxmotorTorque) { input = MaxmotorTorque; }
         wheelCollider.motorTorque = input;
     }
 
@@ -31,8 +46,8 @@ public class LeftWheelController : MonoBehaviour
         Quaternion rotation;
         wheelCollider.GetWorldPose(out position, out rotation);
 
-        this.transform.position = position;
-        this.transform.rotation = rotation; 
+        wheelMesh.transform.position = position;
+        wheelMesh.transform.rotation = rotation;
     }
 
 }

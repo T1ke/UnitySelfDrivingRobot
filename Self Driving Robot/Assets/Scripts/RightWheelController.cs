@@ -11,7 +11,25 @@ public class RightWheelController : MonoBehaviour
     public float MaxmotorTorque = 100f;
     public float maxSteerAngle = 30f;
     public WheelCollider wheelCollider;
+    private Transform wheelMesh;
 
+    private void Start()
+    {
+        wheelMesh = transform.Find("Mesh");
+    }
+
+    private void FixedUpdate()
+    {
+        UpdateWheelVisualRotation();
+    }
+    public float getWheelSpeed()
+    {
+        return wheelCollider.rpm;
+    }
+    public float getSteer()
+    {
+        return wheelCollider.transform.rotation.y;
+    }
 
     public void Steer(float input)
     {
@@ -31,8 +49,8 @@ public class RightWheelController : MonoBehaviour
         Quaternion rotation;
         wheelCollider.GetWorldPose(out position, out rotation);
 
-        this.transform.position = position;
-        this.transform.rotation = rotation;
+        wheelMesh.transform.position = position;
+        wheelMesh.transform.rotation = rotation;
     }
 
 }
